@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Wigwam Wiki</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+    <h1 style="margin:0">Wiki Pages</h1>
+    <nav aria-label="Primary">
+      <a href="/">Home</a> ·
+      <a href="/wiki/index.go">Wiki</a> ·
+      <a href="/wiki/index.go?q=">Search</a> ·
+      <a href="/wiki/index.go?new=1">New</a> ·
+      <a href="/recent">Recent</a>
+    </nav>
+  </header>
+
+  {{ if .Pages }}
+  <ul>
+    {{- range .Pages }}
+    <li style="display:flex;gap:.5rem;align-items:center;margin:.3rem 0">
+      <a href="/wiki/index.go?title={{ . }}" style="flex:1">{{ . }}</a>
+      <small style="display:flex;gap:.5rem">
+        <a href="/wiki/index.go?edit={{ . }}">edit</a>
+        <a href="/history/{{ . }}">history</a>
+        <form method="POST" action="/delete/{{ . }}" style="margin:0;display:inline" onsubmit="return confirm('Delete {{ . }}?')">
+          <button type="submit" style="background:none;border:none;color:#b00;cursor:pointer;font-size:inherit" aria-label="Delete {{ . }}">delete</button>
+        </form>
+      </small>
+    </li>
+    {{- end }}
+  </ul>
+  {{ else }}
+  <p><em>No pages yet.</em></p>
+  {{ end }}
+
+  <form action="/wiki/index.go" method="post" style="margin-top:1rem;padding:1rem;background:#f9f9f9;border:1px solid #ddd" aria-labelledby="qc-title">
+    <h3 id="qc-title" style="margin-top:0">Quick Create</h3>
+    <input type="text" name="title" placeholder="PageName" required pattern="[A-Za-z0-9 _-]+" style="width:18ch;margin-right:.5rem" aria-label="Page title">
+    <input type="hidden" name="content" value="# New Page
+
+Add your content here...">
+    <button type="submit">Create Empty Page</button>
+    <small style="margin-left:1rem">or <a href="/wiki/index.go?new=1">use full form</a></small>
+  </form>
+</body>
+</html>

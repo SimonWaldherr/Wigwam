@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ if .Recent }}Recently Updated{{ else }}Wiki Search{{ end }}</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+    <h1 style="margin:0">{{ if .Recent }}Recently Updated{{ else }}Wiki Search{{ end }}</h1>
+    <nav aria-label="Primary">
+      <a href="/">Home</a> ·
+      <a href="/wiki/index.go">Wiki</a> ·
+      <a href="/wiki/index.go?new=1">New</a> ·
+      <a href="/wiki/index.go?q=">Search</a> ·
+      <a href="/recent">Recent</a>
+    </nav>
+  </header>
+
+  <form method="GET" action="/search" style="margin:1rem 0" role="search" aria-label="Search wiki">
+    <input name="q" value="{{ .Query }}" placeholder="Search titles and content" style="width:40ch" aria-label="Search query">
+    <button type="submit">Search</button>
+  </form>
+
+  {{ if .Results }}
+    <p>{{ len .Results }} result(s){{ if .Query }} for “{{ .Query }}”{{ end }}</p>
+    <ul style="list-style:none;padding:0">
+      {{- range .Results }}
+      <li style="margin:1rem 0;padding:1rem;border-left:3px solid teal">
+        <h3 style="margin:0 0 .5rem">
+          <a href="/wiki/index.go?title={{ .Title }}">{{ .Title }}</a>
+        </h3>
+        <p style="margin:0;color:#666">{{ .Snippet }}</p>
+        <small style="margin-top:.5rem;display:block">
+          <a href="/wiki/index.go?edit={{ .Title }}">edit</a> ·
+          <a href="/history/{{ .Title }}">history</a>
+        </small>
+      </li>
+      {{- end }}
+    </ul>
+  {{ else if .Query }}
+    <p><em>No results for “{{ .Query }}”.</em></p>
+  {{ end }}
+</body>
+</html>

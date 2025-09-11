@@ -1,0 +1,9 @@
+body{font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:2rem}
+header{max-width:900px;margin:0 auto 1rem}
+article,form,ul{max-width:900px;margin:0 auto}
+article{line-height:1.7}
+ul{padding-left:1.2rem}
+textarea{font-family:ui-monospace,Consolas,Monaco,monospace;width:100%}
+nav a{color:teal;text-decoration:none;margin-right:.5rem}
+nav a:hover{text-decoration:underline}
+button{padding:.2rem .5rem}

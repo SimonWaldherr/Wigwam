@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Edit {{ .Title }}</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+    <h1 style="margin:0">Edit {{ .Title }}</h1>
+    <nav aria-label="Primary">
+      <a href="/">Home</a> ·
+      <a href="/wiki/index.go">Wiki</a> ·
+      <a href="/wiki/index.go?title={{ .Title }}">View</a> ·
+      <a href="/history/{{ .Title }}">History</a> ·
+      <a href="/recent">Recent</a>
+    </nav>
+  </header>
+
+  <form method="POST" action="/wiki/index.go" style="max-width:900px;margin:0 auto">
+    <input type="hidden" name="title" value="{{ .Title }}">
+    <label for="content"><strong>Content (Markdown):</strong></label><br>
+    <textarea id="content" name="content" rows="20" cols="90" aria-label="Markdown content">{{ .Content }}</textarea><br>
+    <div style="display:flex;gap:.75rem;align-items:center;margin-top:.5rem">
+      <button type="submit">Save</button>
+      <a href="/wiki/index.go?title={{ .Title }}">Cancel</a>
+    </div>
+  </form>
+</body>
+</html>

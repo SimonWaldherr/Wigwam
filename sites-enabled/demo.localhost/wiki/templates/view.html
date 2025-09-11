@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+    <h1 style="margin:0">{{ .Title }}</h1>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/wiki/index.go">Wiki</a> ·
+      <a href="/wiki/index.go?edit={{ .Title }}">Edit</a> ·
+      <a href="/wiki/index.go?title={{ .Title }}">View</a> ·
+      <a href="/wiki/index.go?new=1">New</a> ·
+      <a href="/wiki/index.go?q=">Search</a> ·
+      <a href="/wiki/index.go">All Pages</a> ·
+      <a href="/wiki/index.go?title={{ .Title }}#history">History</a> ·
+      <a href="/recent">Recent</a>
+    </nav>
+  </header>
+
+  <article>{{ .ContentHTML }}</article>
+</body>
+</html>

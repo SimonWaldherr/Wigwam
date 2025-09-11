@@ -1,0 +1,51 @@
+{
+  "server": {
+    "port": 8080,
+    "sites_dir": "sites-enabled",
+    "mods_dir": "mods-enabled",
+    "built_mods_dir": ".mods-built",
+    "built_sites_dir": ".sites-built",
+    "use_temp_for_mods": false,
+    "use_temp_for_sites": false,
+    "verbose": false,
+    "read_timeout_seconds": 15,
+    "write_timeout_seconds": 15,
+    "idle_timeout_seconds": 60,
+    "max_body_bytes": 16777216,
+    "autoindex_default": false,
+    "directory_index": ["index.go", "index.html"]
+  },
+
+  "security": {
+    "csrf_same_origin": true,
+    "sanitize_markdown": true,
+    "markdown_raw_html_allowed": false,
+    "sanitizer": "bluemonday"
+  },
+
+  "plugins": {
+    "cache_enabled": true,
+    "cleanup_old": true,
+    "plugin_salt": "",
+    "buildmode": "plugin",
+    "gomod_path": ""
+  },
+
+  "logging": {
+    "access_log": true,
+    "access_format": "%h \"%r\" %s %Tms",
+    "stderr_log_level": "info"
+  },
+
+  "defaults": {
+    "site": {
+      "autoindex": null,
+      "document_root": "."
+    }
+  },
+
+  "compat": {
+    "vhost_conf_enabled": true,
+    "vhost_conf_path": "vhost.conf"
+  }
+}

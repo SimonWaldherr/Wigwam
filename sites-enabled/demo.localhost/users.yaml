@@ -1,0 +1,2 @@
+users:
+  alice: "$2y$12$KbQiQW5c0hEw2wTtE4yHku1gA0y0kG6m0GqF2uPq7W3i9m8d8l6nK"  # dummy bcrypt hash

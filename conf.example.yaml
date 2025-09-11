@@ -1,0 +1,76 @@
+# Example configuration for Wigwam
+# Put a production-ready copy at ./conf.json (JSON) or ./conf.yaml (YAML)
+
+server:
+  # Listen port
+  port: 8080
+
+  # Paths relative to project root
+  sites_dir: "sites-enabled"
+  mods_dir: "mods-enabled"
+
+  # Where built .so artifacts live for mods and sites. Prefer a persistent dir
+  built_mods_dir: ".mods-built"      # persistent plugin cache for middleware
+  built_sites_dir: ".sites-built"    # (optional) persistent build dir for site scripts
+
+  # If true, build artifacts for mods/sites are placed into OS temp dir (not recommended)
+  use_temp_for_mods: false
+  use_temp_for_sites: false
+
+  verbose: false
+
+  # HTTP timeouts in seconds
+  read_timeout_seconds: 15
+  write_timeout_seconds: 15
+  idle_timeout_seconds: 60
+
+  # Max request body (bytes)
+  max_body_bytes: 16777216
+
+  # Default autoindex behaviour when vhost.conf does not specify AutoIndex.
+  # null = fall back to vhost.conf (if present); true/false override globally.
+  autoindex_default: false
+
+  # DirectoryIndex order
+  directory_index:
+    - index.go
+    - index.html
+
+security:
+  # CSRF mitigation: enforce same-origin checks for POST handlers when true
+  csrf_same_origin: true
+
+  # Markdown sanitization
+  sanitize_markdown: true
+  markdown_raw_html_allowed: false
+  sanitizer: "bluemonday"   # alternatives: "none", "goldmark-no-raw"
+
+plugins:
+  cache_enabled: true
+  cleanup_old: true
+  buildmode: "plugin"
+  # If empty, server will derive a salt from go.mod+api to avoid ABI mismatches.
+  plugin_salt: ""
+  # Optional explicit path to go.mod if build environment differs
+  gomod_path: ""
+
+logging:
+  access_log: true
+  access_format: '%h "%r" %s %Tms'
+  stderr_log_level: info
+
+defaults:
+  site:
+    # Per-site defaults; if autoindex is null, vhost.conf is consulted per site
+    autoindex: null
+    document_root: "."
+
+compat:
+  # Keep supporting per-site vhost.conf files (vhost.conf remains authoritative for site-level settings)
+  vhost_conf_enabled: true
+  vhost_conf_path: "vhost.conf"
+
+# NOTES / integration
+# - Server should load conf.json (or conf.yaml) at startup and merge settings with environment flags.
+# - vhost.conf remains supported and should override per-site options if present (unless config forces override).
+# - For security: prefer persistent built_dirs over system temporary directories to avoid race/cleanup issues.

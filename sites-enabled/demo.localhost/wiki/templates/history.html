@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }} - History</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+    <h1 style="margin:0">{{ .Title }} — History</h1>
+    <nav aria-label="Primary">
+      <a href="/">Home</a> ·
+      <a href="/wiki/index.go">Wiki</a> ·
+      <a href="/wiki/index.go?title={{ .Title }}">View</a> ·
+      <a href="/wiki/index.go?edit={{ .Title }}">Edit</a> ·
+      <a href="/recent">Recent</a>
+    </nav>
+  </header>
+
+  {{ if .Versions }}
+  <table style="width:100%;border-collapse:collapse;margin:1rem 0">
+    <thead>
+      <tr style="background:#f5f5f5">
+        <th style="text-align:left;padding:.5rem;border:1px solid #ddd">Version</th>
+        <th style="text-align:left;padding:.5rem;border:1px solid #ddd">Updated</th>
+        <th style="text-align:left;padding:.5rem;border:1px solid #ddd">Content Preview</th>
+      </tr>
+    </thead>
+    <tbody>
+    {{- range .Versions }}
+      <tr>
+        <td style="padding:.5rem;border:1px solid #ddd">{{ .Version }}</td>
+        <td style="padding:.5rem;border:1px solid #ddd">{{ .UpdatedAt }}</td>
+        <td style="padding:.5rem;border:1px solid #ddd"><small>{{ .Content }}</small></td>
+      </tr>
+    {{- end }}
+    </tbody>
+  </table>
+  {{ else }}
+  <p><em>No version history available.</em></p>
+  {{ end }}
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>New Wiki Page</title>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <header style="display:flex;gap:1rem;align-items:center;justify-content:space-between">
+    <h1 style="margin:0">Create New Page</h1>
+    <nav aria-label="Primary">
+      <a href="/">Home</a> ·
+      <a href="/wiki/index.go">Wiki</a> ·
+      <a href="/wiki/index.go?q=">Search</a> ·
+      <a href="/recent">Recent</a>
+    </nav>
+  </header>
+
+  <form method="POST" action="/wiki/index.go" style="margin:1rem 0;max-width:900px" aria-labelledby="new-title">
+    <p>
+      <label for="title" id="new-title"><strong>Page Title:</strong></label><br>
+      <input type="text" id="title" name="title" required pattern="[A-Za-z0-9 _-]+"
+             placeholder="PageName" style="width:20ch;margin:.2rem 0"
+             title="Only letters, numbers, spaces, underscore and dash allowed" aria-describedby="title-hint">
+      <small id="title-hint" style="display:block;color:#666">Allowed: letters, numbers, spaces, “_” and “-”.</small>
+    </p>
+
+    <p>
+      <label for="content"><strong>Content (Markdown):</strong></label><br>
+      <textarea id="content" name="content" rows="15" cols="80" required placeholder="# Page Title
+
+Write your content here in Markdown...
+
+## Section
+
+- List item
+- Another item
+
+[Link text](URL)"></textarea>
+    </p>
+
+    <p style="display:flex;gap:.75rem;align-items:center">
+      <button type="submit">Create Page</button>
+      <a href="/wiki/index.go">Cancel</a>
+    </p>
+  </form>
+</body>
+</html>

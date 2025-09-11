@@ -1,0 +1,26 @@
+rules:
+  # Wiki pretty routes
+  - pattern: "^/wiki$"
+    target: "/wiki/"
+    redirect: 301
+  - pattern: "^/wiki/(?:index\.html?)?$"
+    target: "/wiki/index.go"
+    redirect: 0
+  - pattern: "^/wiki/([A-Za-z0-9_-]+)$"
+    target: "/wiki/index.go?title=$1"
+    redirect: 0
+  - pattern: "^/edit/([A-Za-z0-9_-]+)$"
+    target: "/wiki/index.go?edit=$1"
+    redirect: 0
+  - pattern: "^/save/([A-Za-z0-9_-]+)$"
+    target: "/wiki/index.go?title=$1"
+    redirect: 0
+  - pattern: "^/blog$"
+    target: "/blog/"
+    redirect: 301
+  - pattern: "^/post/(\d+)$"
+    target: "/posts/show.go?id=$1"
+    redirect: 0
+  - pattern: "^/old/(.*)$"
+    target: "https://new.example.com/$1"
+    redirect: 308
