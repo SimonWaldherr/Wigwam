@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"compress/gzip"
+	"context"
 	"encoding/json"
 	"crypto/sha256"
 	"encoding/hex"
@@ -16,6 +17,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"plugin"
 	"runtime"
@@ -25,11 +27,19 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
+	"syscall"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/SimonWaldherr/Wigwam/api"
 	"gopkg.in/yaml.v3"
+)
+
+// Build info (set via -ldflags)
+var (
+	buildVersion = "dev"
+	buildCommit  = "unknown"
+	buildDate    = "unknown"
 )
 
 // Salt for plugin filenames: derived from Go version + go.mod + api/api.go.
@@ -722,12 +732,46 @@ func main() {
 
 	httpSrv := &http.Server{
 		Addr: ":" + port,
-		Handler: srv,
 		ReadTimeout: readTimeout,
 		WriteTimeout: writeTimeout,
 		IdleTimeout: idleTimeout,
 	}
 
-	log.Printf("listening on :%s", port)
-	log.Fatal(httpSrv.ListenAndServe())
+	// Health check endpoint (bypasses plugin chain)
+	mux := http.NewServeMux()
+	var startTime = time.Now()
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		uptime := time.Since(startTime).Truncate(time.Second).String()
+		_ = json.NewEncoder(w).Encode(map[string]string{
+			"status":  "ok",
+			"version": buildVersion,
+			"commit":  buildCommit,
+			"uptime":  uptime,
+		})
+	})
+	mux.Handle("/", srv)
+	httpSrv.Handler = mux
+
+	// Graceful shutdown on SIGINT / SIGTERM
+	idleClosed := make(chan struct{})
+	go func() {
+		sigCh := make(chan os.Signal, 1)
+		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+		sig := <-sigCh
+		log.Printf("received %v, shutting down ...", sig)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := httpSrv.Shutdown(ctx); err != nil {
+			log.Printf("shutdown error: %v", err)
+		}
+		close(idleClosed)
+	}()
+
+	log.Printf("listening on :%s (version %s)", port, buildVersion)
+	if err := httpSrv.ListenAndServe(); err != http.ErrServerClosed {
+		log.Fatalf("listen: %v", err)
+	}
+	<-idleClosed
+	log.Println("server stopped")
 }
